@@ -1,4 +1,4 @@
-package resterr
+package rest_err
 
 import "net/http"
 
@@ -27,12 +27,19 @@ func NewRestErr(message string, err string, code int, causes Causes) *RestErr {
 	}
 }
 
-func newBadRequestError(message string, causes Causes) *RestErr {
+func NewBadRequestError(message string, causes []Causes) *RestErr {
+	var causesList []Causes
+	if len(causes) > 0 {
+		causesList = causes
+	} else {
+		causesList = nil // causes será nil por padrão se não houver argumentos
+	}
+
 	return &RestErr{
 		Message: message,
 		Err:     "bad request",
 		Code:    http.StatusBadRequest,
-		Causes:  []Causes{causes},
+		Causes:  causesList,
 	}
 }
 
